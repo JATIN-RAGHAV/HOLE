@@ -12,15 +12,17 @@ export default function Article (){
         let article_name = params.article_name;
         useEffect(() => {
                 const get_data = async() => {
-                        let article: article[] | null= (await supabase.from('articles').select().eq('title',article_name)).data;
-                        setAr(article);
-                        if(article?.length && article[0].url){
-                                fetch(article[0].url ? article[0].url : "https://www.rfc-editor.org/rfc/rfc8446.txt")
-                        .then(res => {
-                                if(!res.ok) throw Error("Couldn't get the article markdown.")
-                                return res.text();
-                        })
-                        .then(setMkdata)
+                        if(article_name){
+                                let article: article[] | null= (await supabase.from('articles').select().eq('title',article_name)).data;
+                                setAr(article);
+                                if(article?.length && article[0].url){
+                                        fetch(article[0].url ? article[0].url : "https://www.rfc-editor.org/rfc/rfc8446.txt")
+                                                .then(res => {
+                                                if(!res.ok) throw Error("Couldn't get the article markdown.")
+                                                        return res.text();
+                                        })
+                                        .then(setMkdata)
+                                }
                         }
                 }
                 get_data();
